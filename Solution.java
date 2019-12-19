@@ -2,6 +2,7 @@ package main.java.com.and.test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Solution {
@@ -24,16 +25,13 @@ public class Solution {
 		int[] numbers = Arrays.stream(input).mapToInt(Integer::parseInt).toArray();
 		
 		// Create initial list to store the permutations 
-		List<Integer> christmasPresents = new ArrayList<>();
-
+		List<String> christmasPresents = new ArrayList<>();
+		
+		// Populate the list with permutations
 		heapsPermutation(numbers, numbers.length, christmasPresents);
 		
-		// Store the data into an array to be ready for sorting
-		int[] perms = new int[christmasPresents.size()];
-		
-		for (int i = 0; i < perms.length; i++) {
-			perms[i] = christmasPresents.get(i);
-		}
+		// Store the data into a String array for sorting and maintaining 0s
+		String[] perms = christmasPresents.stream().toArray(String[]::new);
 		
 		// Sort the array
 		sort(perms);
@@ -41,17 +39,17 @@ public class Solution {
 		// Present the result in the requested format
 		StringBuilder result = new StringBuilder();
 		
-		for (int i = perms.length - 1; i >= 0; i--) {
-			result.append(perms[i]);
-			if (i > 0) result.append(",");
-		}
+		Arrays.stream(perms).sorted(Collections.reverseOrder()).forEach(num -> {
+			result.append(num);
+			result.append(",");
+		});
 		
-		return new String(result);
+		return new String(result).substring(0, result.length()-1);
 	}
 	
 	// ================================= Implement Heap's Permutation
 
-	public static void heapsPermutation(int[] numbers, int n, List<Integer> list) {
+	public static void heapsPermutation(int[] numbers, int n, List<String> list) {
 		if (n == 1) {
 			
 			StringBuilder temp = new StringBuilder();
@@ -60,7 +58,7 @@ public class Solution {
 				temp.append(digit);
 			}
 
-			list.add(Integer.parseInt(temp.toString()));
+			list.add(temp.toString());
 
 		} else {
 			for (int i = 0; i < n; i++) {
@@ -77,11 +75,11 @@ public class Solution {
 
 	// ================================= Implement the merge sort
 	
-	public static void sort(int[] perm) {
+	public static void sort(String[] perm) {
 		sort(perm, 0, perm.length - 1);
 	}
 
-	public static void sort(int[] perm, int start, int end) {
+	public static void sort(String[] perm, int start, int end) {
 		if (end <= start) {
 			return;
 		}
@@ -92,8 +90,8 @@ public class Solution {
 		merge(perm, start, mid, end);
 	}
 
-	public static void merge(int[] perm, int start, int mid, int end) {
-		int[] temp = new int[end - start + 1];
+	public static void merge(String[] perm, int start, int mid, int end) {
+		String[] temp = new String[end - start + 1];
 
 		// Index counters for the left and right sides of the array.
 		int leftSlot = start;
@@ -101,7 +99,7 @@ public class Solution {
 		int k = 0;
 
 		while (leftSlot <= mid && rightSlot <= end) {
-			if (perm[leftSlot] < perm[rightSlot]) {
+			if (Integer.parseInt(perm[leftSlot]) < Integer.parseInt(perm[rightSlot])) {
 				temp[k] = perm[leftSlot];
 				leftSlot++;
 			} else {
@@ -123,7 +121,8 @@ public class Solution {
 				k++;
 			}
 		}
-
+		
+		// Populate
 		for (int i = 0; i < temp.length; i++) {
 			perm[start + i] = temp[i];
 		}
