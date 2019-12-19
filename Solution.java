@@ -54,9 +54,9 @@ public class Solution {
 			
 			StringBuilder temp = new StringBuilder();
 
-			for (int digit : numbers) {
+			Arrays.stream(numbers).forEach(digit -> {
 				temp.append(digit);
-			}
+			});
 
 			list.add(temp.toString());
 
