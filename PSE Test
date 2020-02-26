@@ -1,0 +1,76 @@
+package main.java.com.and.test;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class Solution {
+	
+	//Multiples
+	public static int multiple(int A, int B) {
+		int toBreak = 1000000000;
+		int product = 0;
+		int min = 0;
+		int max = 0;
+		boolean minProductFound = false, maxProductFound = false;
+
+		for (int i = 0; i < toBreak; i++) {
+			product = i * (i + 1);
+
+			if (product == A) {
+				min = i;
+				minProductFound = true;
+			}
+
+			if (product == B) {
+				max = i + 1;
+				maxProductFound = true;
+				break;
+			}
+			
+			if (product > A && !minProductFound) return 0;	
+			if (product > B && !maxProductFound) return 0;
+			
+		}
+		return max - min;
+	}
+	
+	
+	//Strings
+	public static int solution(String S) {
+		
+		String digram = "";
+		int firstDigram = 0;
+		int endDigram = 0;
+		
+		Map<String, Integer> log = new HashMap<>();
+		
+		for (int i = 0; i < S.length() - 1; i++) {
+			digram = S.substring(i, i+1);
+			firstDigram = i;
+			
+			for (int j = i + 1; j < S.length()-1; j++) {
+					if (digram.equals(S.substring(j, j+1))) {
+						endDigram = j;
+						
+						log.put(digram, endDigram - firstDigram);
+					}
+			}
+		}
+		return log.isEmpty() ? -1 : getDistance(log, 0);
+	}
+	
+	public static int getDistance(Map<String, Integer> log, int largestDistance) {
+		
+		for (Map.Entry<String, Integer> d : log.entrySet()) {
+			if (d.getValue() > largestDistance) largestDistance = d.getValue();
+		}
+		return largestDistance;
+	}
+
+	public static void main(String args[]) {
+				
+		System.out.println(solution("abqabab"));
+
+		System.out.println(multiple(6, 20));
+	}
+}
